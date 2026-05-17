@@ -1,10 +1,11 @@
+# import some necessary packadges
 import math
 import numpy as np
 import statsmodels.api as sm
 from scipy import stats
 from scipy.special import comb
 
-
+# trigonometric bases
 def pai_triangle(j, x):
     if j == 0:
         return 1
@@ -13,7 +14,7 @@ def pai_triangle(j, x):
     else:
         return np.sqrt(2) * np.cos(j * np.pi * x)
 
-
+# Legendre polynomials
 def pai_Legendre(j, x):
     temp = 0
     for k in range(j + 1):
