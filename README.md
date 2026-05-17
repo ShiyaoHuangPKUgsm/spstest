@@ -8,14 +8,25 @@ Therefore, specification tests for the propensity score are vital to ensure the 
 
 Inspired by Neyman's smooth methods, we propose to assess the propensity score specification by testing the joint significance of the generalized Fourier coefficients.
 Under the null hypothesis, the test statistic is asymptotically $\chi^2$ distributed. 
-Compared with existing tests, our proposed methods are computaionally efficient and more sensitive to high-frequency alternatives.
-Here, we provide th python package that enables empirical researchers to use the methods conveniently.
+Compared with existing tests, our proposed methods are computationally efficient and more sensitive to high-frequency alternatives.
+Here, we provide the Python package that enables empirical researchers to use the methods conveniently.
 
 ## Installing and using spstest
 To install the package, first run `pip install git+https://github.com/ShiyaoHuangPKUgsm/spstest.git` in the terminal, 
-and then import it via `from spstest import spstest` in python. 
+and then import it via `from spstest import spstest` in Python. 
 
 The function spstest has six parameters:
 ```python
 spstest(D, X, model="probit", basis="T", data_driven=True, s_range=[1, 8])
 ```
+Specifically, `D` is an $n$-dimensional NumPy vector, and `X` is an $n \times k$ NumPy matrix, where $n$ denotes the sample size and $k$ denotes the number of covariates. **An intercept term should not be included in `X`.**
+The argument `model` takes either `'probit'` or `'logit'`, indicating the parametric specification to be tested. The argument `basis` specifies the set of basis functions used to construct the test statistic; we provide `'T'` for trigonometric bases and `'L'` for Legendre polynomials.
+Users can set `data_driven = True` to perform the data-driven test, or `data_driven = False` to conduct the fixed-$s$ test. If `data_driven = True`, `s_range` should be a list of two positive integers specifying the range for selecting the optimal testing order. Otherwise, `s_range` should be a single positive integer $s$ (we recommend $1 \leq s \leq 4$ in this case).
+After running `spstest(D, X)`, the function returns the $p$-value of the test. We reject the null hypothesis of correct specification if the $p$-value is smaller than a chosen significance level (typically 0.05).
+
+It is worth noting that spstest should be regarded as a model validation procedure rather than a model selection method. For a given propensity score model, spstest is designed to assess its reliability. If the null hypothesis is rejected, one may reconsider the parametric specification or modify the set of covariates by adding or removing certain variables.
+
+## Authors
+Shiyao Huang, Department of Business Statistics and Econometrics, Guanghua School of Management, Peking University, Beijing, 100871, China. Email: 2401111054@gsm.pku.edu.cn.
+
+Xiaojun Song, Department of Business Statistics and Econometrics, Guanghua School of Management, Peking University, Beijing, 100871, China. Email: sxj@gsm.pku.edu.cn.
