@@ -118,7 +118,7 @@ def H(x, n):
 
 
 def spstest(D, X, model="probit", basis="T", data_driven=True, s_range=[1, 8]):
-    D = np.array(D)
+    D = np.array(D).reshape(-1)
     X = np.array(X)
     n = X.shape[0]
     X = np.column_stack((np.ones(n), X))
