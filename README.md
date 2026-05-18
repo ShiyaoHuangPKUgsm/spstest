@@ -13,13 +13,13 @@ Here, we provide the Python package that enables empirical researchers to use th
 
 ## Installing and using spstest
 To install the package, first run `pip install git+https://github.com/ShiyaoHuangPKUgsm/spstest.git` in the terminal, 
-and then import it via `from spstest import spstest` in Python. 
+and then import it via `from spstest import spstest` in Python. Suppose we observe $n$ i.i.d. copies $\{(D_i, X_i)\}_{i=1}^n$ from the underlying population, where $D_i \in \\{0,1\\}$ is a treatment indicator for individual $i$, and $X_i \in \mathbb{R}^k$ is a $k$-dimensional vector of covariates.
 
 The function spstest has six parameters:
 ```python
 spstest(D, X, model="probit", basis="T", data_driven=True, s_range=[1, 8])
 ```
-Specifically, `D` is an $n$-dimensional NumPy vector, and `X` is an $n \times k$ NumPy matrix, where $n$ denotes the sample size and $k$ denotes the number of covariates. **An intercept term should not be included in `X`.**
+Specifically, `D` is an $n$-dimensional NumPy array $D=(D_1,D_2,\ldots,D_n)'$, and `X` is an $n \times k$ NumPy matrix $X = (X_1',X_2',\ldots,X_n')'$. **Note that `X` should exclude the intercept term, as it is automatically included by the function.**
 The argument `model` takes either `'probit'` or `'logit'`, indicating the parametric specification to be tested. The argument `basis` specifies the set of basis functions used to construct the test statistic; we provide `'T'` for trigonometric bases and `'L'` for Legendre polynomials.
 Users can set `data_driven = True` to perform the data-driven test, or `data_driven = False` to conduct the fixed-$s$ test. If `data_driven = True`, `s_range` should be a list of two positive integers specifying the range for selecting the optimal testing order. Otherwise, `s_range` should be a single positive integer $s$ (we recommend $1 \leq s \leq 4$ in this case).
 After running `spstest(D, X)`, the function returns the $p$-value of the test. We reject the null hypothesis of correct specification if the $p$-value is smaller than a chosen significance level (typically 0.05).
