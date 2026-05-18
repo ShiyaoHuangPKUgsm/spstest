@@ -118,13 +118,11 @@ def H(x, n):
                + 2 * (1 - stats.norm.cdf(np.sqrt(np.log(n))))
 
 
-def spstest(D, X, model="probit", basis="T", data_driven=True, s_range=[1, 8]):
-    D = np.array(D).reshape(-1)
-    X = np.array(X)
+def spstest(D, X, model="probit", basis="T", data_driven=True, s=8):
     n = X.shape[0]
     X = np.column_stack((np.ones(n), X))
 
     if data_driven:
-        return 1 - H(data_driven_test(D, X, model, basis, s_range), n)
+        return 1 - H(data_driven_test(D, X, model, basis, [1,s]), n)
     else:
-        return stats.chi2.sf(test_statistic(D, X, model, basis, s_range), s_range)
+        return stats.chi2.sf(test_statistic(D, X, model, basis, s), s)
