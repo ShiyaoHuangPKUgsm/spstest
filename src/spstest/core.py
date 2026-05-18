@@ -1,4 +1,4 @@
-# import some necessary packadges
+# import some necessary packages
 import math
 import numpy as np
 import statsmodels.api as sm
@@ -21,7 +21,7 @@ def pai_Legendre(j, x):
         temp = temp + comb(j, k) * comb(j + k, k) * ((-x) ** k)
     return math.sqrt(2 * j + 1) * ((-1) ** j) * temp
 
-
+# estimate the parameter
 def cal_theta(D, X, model):
     if model == "probit":
         probit_model = sm.Probit(D, X)
@@ -32,7 +32,7 @@ def cal_theta(D, X, model):
         logit_result = logit_model.fit(disp=False)
         return (logit_result.params).reshape(-1, 1)
 
-
+# calculate necessary quantities for the test
 def cal_Z(X, hat_theta, model):
     n = X.shape[0]
     if model == "probit":
@@ -40,13 +40,11 @@ def cal_Z(X, hat_theta, model):
     if model == "logit":
         return np.reshape(stats.logistic.cdf(X @ hat_theta, loc=0, scale=1), (n,))
 
-
 def cal_g(X, hat_theta, model):
     if model == "probit":
         return (X.T) * (stats.norm.pdf(X @ hat_theta, loc=0, scale=1).T)
     if model == "logit":
         return (X.T) * (stats.logistic.pdf(X @ hat_theta, loc=0, scale=1).T)
-
 
 def cal_G(j, g, Z, basis):
     if basis == "T":
@@ -54,11 +52,9 @@ def cal_G(j, g, Z, basis):
     if basis == "L":
         return np.mean(g * pai_Legendre(j, Z), axis=1)
 
-
 def cal_Delta(g):
     n = g.shape[1]
     return (g @ g.T) / n
-
 
 def cal_PI(Z, s, basis):
     n = Z.shape[0]
@@ -71,7 +67,6 @@ def cal_PI(Z, s, basis):
         PI[:, j] = pai(j, Z)
     return PI
 
-
 def cal_GM(g, Z, s, basis):
     p = g.shape[0]
     GM = np.zeros((p, s))
@@ -79,7 +74,7 @@ def cal_GM(g, Z, s, basis):
         GM[:, j] = cal_G(j, g, Z, basis)
     return GM
 
-
+# calculate the value of the test statistic
 def test_statistic(D, X, model, basis, s):
     n = X.shape[0]
     hat_theta = cal_theta(D, X, model)
@@ -97,7 +92,7 @@ def test_statistic(D, X, model, basis, s):
     Sigma = (BE.T @ BE) / n
     return (n * A.T @ (np.linalg.inv(Sigma)) @ A)[0, 0]
 
-
+# calculate the data-driven test statistic
 def data_driven_test(D, X, model, basis, s_range):
     n = X.shape[0]
     result_ls = []
@@ -107,7 +102,7 @@ def data_driven_test(D, X, model, basis, s_range):
     result_ls.sort(key=lambda x: x[-1], reverse=True)
     return result_ls[0][1]
 
-
+# CDF approximation for the data-driven test in finite samples
 def H(x, n):
     if x <= np.log(n):
         return (2 * stats.norm.cdf(np.sqrt(x)) - 1) * (2 * stats.norm.cdf(np.sqrt(np.log(n))) - 1)
@@ -117,10 +112,10 @@ def H(x, n):
         return (2 * stats.norm.cdf(np.sqrt(x)) - 1) * (2 * stats.norm.cdf(np.sqrt(np.log(n))) - 1) \
                + 2 * (1 - stats.norm.cdf(np.sqrt(np.log(n))))
 
-
+# calculate the p-value of the test
 def spstest(D, X, model="probit", basis="T", data_driven=True, s=8):
     n = X.shape[0]
-    X = np.column_stack((np.ones(n), X))
+    X = np.column_stack((np.ones(n), X)) # add the intercept term
 
     if data_driven:
         return 1 - H(data_driven_test(D, X, model, basis, [1,s]), n)
