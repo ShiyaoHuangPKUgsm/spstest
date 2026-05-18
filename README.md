@@ -13,7 +13,7 @@ Here, we provide the Python package that enables empirical researchers to use th
 
 ## Installing and using spstest
 To install the package, first run `pip install git+https://github.com/ShiyaoHuangPKUgsm/spstest.git` in the terminal, 
-and then import it via `from spstest import spstest` in Python. Suppose we observe $n$ i.i.d. copies $\{(D_i, X_i)\}_{i=1}^n$ from the underlying population, where $D_i \in \\{0,1\\}$ is a treatment indicator for individual $i$, and $X_i \in \mathbb{R}^k$ is a $k$-dimensional vector of covariates.
+and then import it via `from spstest import spstest` in Python. Suppose we observe $n$ i.i.d. copies $\\{(D_i, X_i)\\}_{i=1}^n$ from the underlying population, where $D_i \in \\{0,1\\}$ is a treatment indicator for individual $i$, and $X_i \in \mathbb{R}^k$ is a $k$-dimensional vector of covariates.
 
 The function spstest has six parameters:
 ```python
